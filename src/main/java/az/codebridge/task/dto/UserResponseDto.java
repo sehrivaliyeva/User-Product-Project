@@ -1,5 +1,6 @@
 package az.codebridge.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
