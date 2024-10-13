@@ -45,6 +45,7 @@ public class UserController {
     public BalanceDto getUserBalanceByUserName(@PathVariable String userName){
         return userService.getUserBalanceWithUserName(userName);
     }
+
     @GetMapping
     public List<UserResponseDto> getUsers(){
         return userService.getUsers();

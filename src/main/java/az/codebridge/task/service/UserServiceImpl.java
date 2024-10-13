@@ -7,12 +7,10 @@ import az.codebridge.task.entity.UserEntity;
 import az.codebridge.task.exception.UserNotFoundException;
 import az.codebridge.task.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -169,4 +167,4 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    }
+}

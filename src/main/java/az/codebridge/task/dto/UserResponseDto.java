@@ -14,4 +14,8 @@ public class UserResponseDto {
     private Integer age;
     private Double balance;
     private String  isActive;
+
+    //data transfer object
+
+    //entity ---> Dto---> user
 }

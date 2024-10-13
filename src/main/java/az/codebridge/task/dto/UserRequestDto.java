@@ -14,4 +14,6 @@ public class UserRequestDto {
     private Integer age;
     private Double balance;
     private String isActive;
+
+    //entity --> dto --> user
 }
