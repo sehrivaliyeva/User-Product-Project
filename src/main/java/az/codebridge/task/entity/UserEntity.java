@@ -25,6 +25,7 @@ public class UserEntity {
     private String surname;
     private Integer age;
     private Double balance;
-    private String  isActive;
+    private String isActive;
+
 
 }

@@ -1,25 +1,16 @@
-package az.codebridge.task.entity;
+package az.codebridge.task.dto;
 
 import az.codebridge.task.status.ProductStatus;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Builder
 @Data
-@Table
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Builder
+public class ProductRequestDto {
     private String name;
 
     private Double price;
@@ -32,6 +23,4 @@ public class ProductEntity {
     private ProductStatus status;
 
     private LocalDateTime createdAt;
-
 }
-

@@ -1,4 +1,4 @@
-package az.codebridge.task.rest;
+package az.codebridge.task.controller;
 
 import az.codebridge.task.dto.BalanceDto;
 import az.codebridge.task.dto.UserRequestDto;
