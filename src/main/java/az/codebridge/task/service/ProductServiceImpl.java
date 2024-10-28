@@ -5,7 +5,6 @@ import az.codebridge.task.dto.ProductResponseDto;
 import az.codebridge.task.entity.ProductEntity;
 import az.codebridge.task.entity.UserEntity;
 import az.codebridge.task.exception.ProductNotFoundException;
-import az.codebridge.task.exception.StockException;
 import az.codebridge.task.exception.UserNotFoundException;
 import az.codebridge.task.repository.ProductRepository;
 import az.codebridge.task.repository.UserRepository;
@@ -13,7 +12,6 @@ import az.codebridge.task.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
