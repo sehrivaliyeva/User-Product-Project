@@ -5,6 +5,7 @@ import az.codebridge.task.dto.ProductResponseDto;
 import az.codebridge.task.exception.StockException;
 import az.codebridge.task.service.ProductService;
 import az.codebridge.task.status.ProductStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,12 @@ public class ProductController {
      **/
 
     @PostMapping("/create-product")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ProductResponseDto createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
         return productService.createProduct(productRequestDto);
     }
 
     @PutMapping("/update-product/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto) {
+    public ProductResponseDto updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
         return productService.updateProduct(id, productRequestDto);
     }
 
