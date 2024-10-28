@@ -4,6 +4,7 @@ import az.codebridge.task.status.ProductStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +17,11 @@ public class ProductRequestDto {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull    
     @Positive
     private Double price;
 
-    @NotBlank
+    @NotNull
     @Positive
     private Integer stockQuantity;
 
@@ -28,9 +29,8 @@ public class ProductRequestDto {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @NotNull
     private ProductStatus status;
 
-    @NotBlank
     private LocalDateTime createdAt;
 }
