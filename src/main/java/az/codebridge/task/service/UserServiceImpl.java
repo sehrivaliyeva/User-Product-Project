@@ -1,6 +1,5 @@
 package az.codebridge.task.service;
 
-import az.codebridge.task.dto.BalanceDto;
 import az.codebridge.task.dto.UserRequestDto;
 import az.codebridge.task.dto.UserResponseDto;
 import az.codebridge.task.entity.UserEntity;
@@ -154,16 +153,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BalanceDto getUserBalanceWithUserName(String userName) {
+    public UserResponseDto getUserBalanceWithUserName(String userName) {
         UserEntity user =  userRepository.findByUserName(userName);
 
         if(user == null){
             throw new UserNotFoundException("User not found");
         }
 
-        return BalanceDto.builder()
-                .balance(user.getBalance())
-                .build();
+       return UserResponseDto.builder()
+               .id(user.getId())
+               .userName(user.getUserName())
+               .name(user.getName())
+               .surname(user.getSurname())
+               .age(user.getAge())
+               .balance(user.getBalance())
+               .isActive(user.getIsActive())
+               .build();
+
+
     }
 
 

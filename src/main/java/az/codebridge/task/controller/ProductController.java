@@ -7,6 +7,8 @@ import az.codebridge.task.service.ProductService;
 import az.codebridge.task.status.ProductStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,13 +33,18 @@ public class ProductController {
      **/
 
     @PostMapping("/create-product")
-    public ProductResponseDto createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        return productService.createProduct(productRequestDto);
+    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+        ProductResponseDto product = productService.createProduct(productRequestDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(product);
     }
 
     @PutMapping("/update-product/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
-        return productService.updateProduct(id, productRequestDto);
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
+        ProductResponseDto productResponseDto = productService.updateProduct(id, productRequestDto);
+        return ResponseEntity.
+                ok(productResponseDto);
     }
 
     @PutMapping("/soft-delete-product/{id}")

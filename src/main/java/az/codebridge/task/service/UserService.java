@@ -1,7 +1,6 @@
 package az.codebridge.task.service;
 
 
-import az.codebridge.task.dto.BalanceDto;
 import az.codebridge.task.dto.UserRequestDto;
 import az.codebridge.task.dto.UserResponseDto;
 
@@ -20,5 +19,5 @@ public interface UserService {
 
     List<UserResponseDto> getUsers();
 
-    BalanceDto getUserBalanceWithUserName(String userName);
+    UserResponseDto getUserBalanceWithUserName(String userName);
 }

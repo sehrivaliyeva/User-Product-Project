@@ -161,6 +161,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+
     @Override
     public ProductResponseDto reverseProduct(Long productId, Long userId) {
         ProductEntity productEntity = productRepository.findById(productId)
@@ -178,7 +179,6 @@ public class ProductServiceImpl implements ProductService {
                 .stockQuantity(save.getStockQuantity())
                 .status(save.getStatus())
                 .build();
-
     }
 
    /* @Override

@@ -1,6 +1,7 @@
 package az.codebridge.task.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,8 +15,4 @@ public class UserResponseDto {
     private Integer age;
     private Double balance;
     private String  isActive;
-
-    //data transfer object
-
-    //entity ---> Dto---> user
 }
