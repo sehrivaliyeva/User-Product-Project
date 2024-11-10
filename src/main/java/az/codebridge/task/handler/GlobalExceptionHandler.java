@@ -1,5 +1,8 @@
 package az.codebridge.task.handler;
 
+import az.codebridge.task.exception.BalanceException;
+import az.codebridge.task.exception.ProductNotFoundException;
+import az.codebridge.task.exception.StockException;
 import az.codebridge.task.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,32 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
     }
 
+    //Bunu elave elemisem
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handle(ProductNotFoundException ex,
+                                                      WebRequest request) {
+        log.trace("Product not found exception occurred", ex);
+        return ofType(request, HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
+    }
+
+    //bunu elave elemisem
+    @ExceptionHandler(StockException.class)
+    public ResponseEntity<Map<String, Object>> handle(StockException ex,
+                                                      WebRequest request) {
+        log.trace("stock exception occurred", ex);
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage(), List.of());
+    }
+
+
+    //bunu elave elemisem
+    @ExceptionHandler(BalanceException.class)
+    public ResponseEntity<Map<String, Object>> handle(BalanceException ex,
+                                                      WebRequest request) {
+        log.trace("balance exception occurred", ex);
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage(), List.of());
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handle(MethodArgumentNotValidException ex,
@@ -43,7 +72,7 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.NOT_FOUND, "Validation failed for argument", list);
     }
 
-    private ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message, List<ConstraintsViolationError> list ) {
+    private ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message, List<ConstraintsViolationError> list) {
         Map<String, Object> attributes = getErrorAttributes(request, ErrorAttributeOptions.defaults());
         attributes.put("status", status.value());
         attributes.put("error", message);

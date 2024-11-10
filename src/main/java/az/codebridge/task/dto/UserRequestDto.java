@@ -18,7 +18,7 @@ public class UserRequestDto {
     private String name;
     @NotBlank
     private String surname;
-    @NotBlank
+    @NotNull
     private Integer age;
     @NotNull
     @Positive

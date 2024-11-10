@@ -58,26 +58,22 @@ public class ProductController {
         return productService.findById(id);
     }
 
+    @GetMapping("/get-name/{productName}")
+    public ProductResponseDto getProductByName(@PathVariable String productName) {
+        return productService.findByProductName(productName);
+    }
+
+
     @GetMapping("/get-all-products")
     public List<ProductResponseDto> getAllProducts() {
         return productService.getAllProducts();
     }
 
-   /* @PostMapping("/buy/{id}")
-    public String buyProduct(@PathVariable Long id, @RequestParam Integer quantity) {
-        try {
-            productService.buyProduct(id, quantity);
-            return "MEHSUL UGURLA ALINDI";
-        } catch (StockException e) {
-            return "Error: " + e.getMessage();
-        } catch (RuntimeException e) {
-            return "PROSES UGURSUZ OLDU !!";
-        }
-    }*/
 
+    //BU METODDA DUZELIS ELEMISHEM
     @GetMapping("/buy/{product_id}/{user_id}")
-    public ProductResponseDto buyProduct(@PathVariable Long product_id, @PathVariable Long user_id) {
-        return productService.buyProduct(product_id, user_id);
+    public ProductResponseDto buyProduct(@PathVariable Long product_id, @PathVariable Long user_id, @RequestParam int count) {
+        return productService.buyProduct(product_id, user_id, count);
     }
 
     @GetMapping("/reverse-product/{product_id}/{user_id}")

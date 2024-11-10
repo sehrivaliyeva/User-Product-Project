@@ -17,9 +17,11 @@ public interface ProductService {
 
     List<ProductResponseDto> getAllProducts();
 
-    ProductResponseDto buyProduct(Long productId, Long userId);
+    ProductResponseDto buyProduct(Long productId, Long userId,int count);
 
     ProductResponseDto reverseProduct(Long productId, Long userId);
 
-    //void buyProduct(Long id, Integer quantity);
+
+    ProductResponseDto findByProductName(String productName);
+
 }

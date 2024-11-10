@@ -4,13 +4,18 @@ import az.codebridge.task.dto.ProductRequestDto;
 import az.codebridge.task.dto.ProductResponseDto;
 import az.codebridge.task.entity.ProductEntity;
 import az.codebridge.task.entity.UserEntity;
+import az.codebridge.task.exception.BalanceException;
 import az.codebridge.task.exception.ProductNotFoundException;
+import az.codebridge.task.exception.StockException;
 import az.codebridge.task.exception.UserNotFoundException;
 import az.codebridge.task.repository.ProductRepository;
 import az.codebridge.task.repository.UserRepository;
 import az.codebridge.task.status.ProductStatus;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,8 +25,17 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+        ProductEntity productEntity = modelMapper.map(productRequestDto, ProductEntity.class);
+        ProductEntity savedProductEntity = productRepository.save(productEntity);
+        return modelMapper.map(savedProductEntity, ProductResponseDto.class);
+    }
+
+   /* @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         ProductEntity productEntity = ProductEntity.builder()
                 .name(productRequestDto.getName())
@@ -41,9 +55,11 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
 
-    }
+    }*/
+
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto) {
 
         ProductEntity productEntity = productRepository.findById(id)
@@ -76,10 +92,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponseDto findById(Long id) {
 
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("MEHSUL MOVCUD DEYIL"));
+
 
         if (productEntity.getStatus().equals(ProductStatus.DELETED)) {
             System.out.println("MEHSUL MOVCUD DEYIL !!!");
@@ -99,24 +117,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
-       /* List<ProductEntity> productEntities = productRepository.findAll();
-        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
-
-        for (ProductEntity productEntity : productEntities) {
-            if (!productEntity.getStatus().equals(ProductStatus.DELETED)) {
-                ProductResponseDto productResponseDto = ProductResponseDto.builder()
-                        .name(productEntity.getName())
-                        .price(productEntity.getPrice())
-                        .stockQuantity(productEntity.getStockQuantity())
-                        .description(productEntity.getDescription())
-                        .status(productEntity.getStatus())
-                        .build();
-                productResponseDtos.add(productResponseDto);
-            }
-        }
-
-        return productResponseDtos;*/
 
         return productRepository.findAll().stream()
                 .map(productEntity -> ProductResponseDto.builder()
@@ -129,36 +131,40 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    //burda duzelis elemisem
     @Override
-    public ProductResponseDto buyProduct(Long productId, Long userId) {
+    @Transactional(rollbackFor = {UserNotFoundException.class, ProductNotFoundException.class, StockException.class, BalanceException.class})
+    public ProductResponseDto buyProduct(Long productId, Long userId, int count) {
         ProductEntity productEntity = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("MEHSUL MOVCUD DEYIL !!!"));
+                .orElseThrow(() -> new ProductNotFoundException("Məhsul mövcud deyil!"));
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User Tapilmadi "));
+                .orElseThrow(() -> new UserNotFoundException("İstifadəçi tapılmadı"));
 
         if (productEntity.getStatus().equals(ProductStatus.DELETED)) {
-            throw new RuntimeException("Bu mehsul silinib ");
-
+            throw new RuntimeException("Bu məhsul silinib");
         }
 
-        if (userEntity.getBalance() > productEntity.getPrice()) {
-            productEntity.setStockQuantity(productEntity.getStockQuantity() - 1);
-            userEntity.setBalance(userEntity.getBalance() - productEntity.getPrice());
-
-
-        } else {
-            throw new RuntimeException("KIFAYET QEDER BALANS YOXDUR !!!");
+        if (productEntity.getStockQuantity() < count) {
+            throw new StockException("Bazada kifayət qədər məhsul yoxdur");
         }
-        ProductEntity product = productRepository.save(productEntity);
+
+        if (userEntity.getBalance() < productEntity.getPrice() * count) {
+            throw new BalanceException("Kifayət qədər balans yoxdur!");
+        }
+
+        productEntity.setStockQuantity(productEntity.getStockQuantity() - count);
+        userEntity.setBalance(userEntity.getBalance() - productEntity.getPrice() * count);
+
+        productRepository.save(productEntity);
         userRepository.save(userEntity);
-        return ProductResponseDto.builder()
-                .name(product.getName())
-                .price(product.getPrice())
-                .description(product.getDescription())
-                .stockQuantity(product.getStockQuantity())
-                .status(product.getStatus())
-                .build();
 
+        return ProductResponseDto.builder()
+                .name(productEntity.getName())
+                .price(productEntity.getPrice())
+                .description(productEntity.getDescription())
+                .stockQuantity(productEntity.getStockQuantity())
+                .status(productEntity.getStatus())
+                .build();
     }
 
 
@@ -181,27 +187,12 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-   /* @Override
-    public void buyProduct(Long id, Integer quantity) {
-        ProductEntity product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("MEHSUL MOVCUD DEYIL !!!"));
-
-        if (!product.getStatus().equals(ProductStatus.ACTIVE)) {
-            throw new ProductNotFoundException("MEHSUL MOVCUD DEYIL !!!");
-        }
-
-        if (quantity > product.getStockQuantity()) {
-            throw new StockException("LAZM OLAN MEHSUL MIQDARI BAZADA MOVCUD DEYIL !!");
-        }
-        product.setStockQuantity(product.getStockQuantity() - quantity);
-
-
-        if (product.getStockQuantity() == 0) {
-            product.setStatus(ProductStatus.OUT_OF_STOCK);
-        }
-
-        productRepository.save(product);
-    }*/
+    @Override
+    public ProductResponseDto findByProductName(String productName) {
+        ProductEntity entity = productRepository.findByName(productName)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        return modelMapper.map(entity, ProductResponseDto.class);
+    }
 
 
 }

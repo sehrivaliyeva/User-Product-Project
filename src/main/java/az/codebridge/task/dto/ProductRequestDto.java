@@ -14,18 +14,19 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class ProductRequestDto {
-    @NotBlank
+
+    @NotBlank(message = "name not be null")
     private String name;
 
-    @NotNull    
+    @NotNull(message = "price not be null")
     @Positive
     private Double price;
 
-    @NotNull
+    @NotNull(message = "stock not be null")
     @Positive
     private Integer stockQuantity;
 
-    @NotBlank
+    @NotBlank(message = "description not be null")
     private String description;
 
     @Enumerated(EnumType.STRING)

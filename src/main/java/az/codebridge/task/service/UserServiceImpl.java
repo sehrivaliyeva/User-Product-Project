@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         UserEntity user = userRepository.findById(id).orElse(null);
 
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUser(Long id) {
         UserEntity user = userRepository.findById(id).orElse(null);
 
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserByUserName(String userName) {
         UserEntity user = userRepository.findByUserName(userName);
 
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -141,34 +141,34 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll()
                 .stream()
                 .map(userEntity ->
-                    UserResponseDto.builder()
-                            .id(userEntity.getId())
-                            .userName(userEntity.getUserName())
-                            .name(userEntity.getName())
-                            .surname(userEntity.getSurname())
-                            .age(userEntity.getAge())
-                            .balance(userEntity.getBalance())
-                            .isActive(userEntity.getIsActive())
-                            .build()).collect(Collectors.toList());
+                        UserResponseDto.builder()
+                                .id(userEntity.getId())
+                                .userName(userEntity.getUserName())
+                                .name(userEntity.getName())
+                                .surname(userEntity.getSurname())
+                                .age(userEntity.getAge())
+                                .balance(userEntity.getBalance())
+                                .isActive(userEntity.getIsActive())
+                                .build()).collect(Collectors.toList());
     }
 
     @Override
     public UserResponseDto getUserBalanceWithUserName(String userName) {
-        UserEntity user =  userRepository.findByUserName(userName);
+        UserEntity user = userRepository.findByUserName(userName);
 
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
-       return UserResponseDto.builder()
-               .id(user.getId())
-               .userName(user.getUserName())
-               .name(user.getName())
-               .surname(user.getSurname())
-               .age(user.getAge())
-               .balance(user.getBalance())
-               .isActive(user.getIsActive())
-               .build();
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .userName(user.getUserName())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .age(user.getAge())
+                .balance(user.getBalance())
+                .isActive(user.getIsActive())
+                .build();
 
 
     }
