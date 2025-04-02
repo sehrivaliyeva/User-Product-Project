@@ -13,7 +13,6 @@ User-Product App is a Java-based application that allows users to perform variou
 
 ## 🛠️ Tech Stack
 - **Java & Spring Boot** – Backend framework for rapid development.
-- **Spring Security & JWT** – Ensures secure authentication and authorization.
 - **Spring Data JPA** – Facilitates database interactions.
 - **Hibernate** – ORM for efficient database management.
 - **H2** – Relational database for storing user and product data.
